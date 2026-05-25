@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Практика проживания тревоги</title>
+  <style>
+    :root {
+      --bg: #f7f1ec;
+      --card: #fffaf6;
+      --text: #2f2723;
+      --muted: #7b6b63;
+      --accent: #b7775b;
+      --accent-dark: #8f553d;
+      --soft: #ead8cf;
+      --line: #e3cdc2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #efe1d9 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app { max-width: 860px; margin: 0 auto; }
+
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 18px 50px rgba(90, 55, 40, 0.08);
+    }
+
+    .hero { margin-bottom: 20px; }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.05;
+      color: var(--accent-dark);
+    }
+
+    h2 { margin-top: 0; font-size: 27px; color: var(--accent-dark); }
+    h3 { margin-top: 22px; color: var(--accent-dark); }
+
+    p, li {
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .note { color: var(--muted); font-size: 16px; }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 18px 0 22px;
+    }
+
+    .dot { height: 9px; background: var(--soft); border-radius: 99px; }
+    .dot.active { background: var(--accent); }
+
+    .card { display: none; animation: appear .25s ease; }
+    .card.active { display: block; }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 18px 0 8px;
+      font-size: 17px;
+    }
+
+    textarea, select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      font-size: 17px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+
+    textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(183, 119, 91, 0.14);
+    }
+
+    .practice-box {
+      background: #f3e5de;
+      border-radius: 20px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+
+    .scale-wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 10px;
+    }
+
+    input[type="range"] { width: 100%; }
+
+    .scale-value {
+      font-size: 34px;
+      color: var(--accent-dark);
+      font-weight: 700;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: .15s ease;
+      font-family: inherit;
+    }
+
+    .chip.selected {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 26px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-size: 17px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .primary { background: var(--accent); color: white; }
+    .primary:hover { background: var(--accent-dark); }
+
+    .secondary {
+      background: #fff;
+      color: var(--accent-dark);
+      border: 1px solid var(--line);
+    }
+
+    .summary {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      font-size: 16px;
+      line-height: 1.55;
+      margin-top: 16px;
+    }
+
+    .small { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+    @media (max-width: 640px) {
+      body { padding: 14px; }
+      .hero, .card { padding: 22px; border-radius: 22px; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <h1>Практика проживания тревоги</h1>
+      <p>Протокол проживания эмоции через 3 этапа: <strong>идентифицировать → прожить → принять</strong>.</p>
+      <p class="note">Эта практика помогает экологично пройти цикл эмоции и прийти к завершению эмоционального напряжения — гештальту.</p>
+      <p class="note">Цель практики — не «успокоить себя», а помочь эмоции завершить свой цикл естественным образом.</p>
+    </section>
+
+    <div class="progress" aria-label="Прогресс">
+      <div class="dot active" id="dot0"></div>
+      <div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+    </div>
+
+    <section class="card active" data-step="0">
+      <h2>Вход в практику</h2>
+      <p>Вспомните ситуацию, в которой Вы сильно ощущали тревогу.</p>
+
+      <label for="situation">Опишите ситуацию коротко</label>
+      <textarea id="situation" placeholder="Например: разговор, ожидание ответа, отношения, здоровье, деньги, работа..."></textarea>
+
+      <label for="before">Уровень тревоги сейчас от 0 до 10</label>
+      <div class="scale-wrap">
+        <input type="range" id="before" min="0" max="10" value="5" oninput="updateScale('before','beforeValue')">
+        <div class="scale-value" id="beforeValue">5</div>
+      </div>
+
+      <div class="buttons">
+        <span></span>
+        <button class="primary" type="button" onclick="nextStep()">Начать практику</button>
+      </div>
+    </section>
+
+    <section class="card" data-step="1">
+      <h2>1 этап. Идентифицировать эмоцию</h2>
+
+      <p>Эмоцию невозможно прожить, пока она остаётся общим состоянием «мне плохо» или «мне тревожно».</p>
+      <p>Сначала важно перевести эмоцию в ощущение: где она находится в теле, как ощущается и как называется.</p>
+
+      <div class="practice-box">
+        <p>Не спешите. Сейчас важно не анализировать ситуацию, а начать замечать себя и свои ощущения.</p>
+      </div>
+
+      <label for="bodyPlace">Шаг 1. Где в теле находится самое проявленное ощущение на эту ситуацию?</label>
+      <select id="bodyPlace">
+        <option value="в животе">в животе</option>
+        <option value="в груди">в груди</option>
+        <option value="в горле">в горле</option>
+        <option value="в плечах">в плечах</option>
+        <option value="в голове">в голове</option>
+      </select>
+
+      <label>Шаг 2. Выберите параметры ощущения</label>
+      <div class="chips" id="senseChips">
+        <button type="button" class="chip">напряжённо</button>
+        <button type="button" class="chip">расслабленно</button>
+        <button type="button" class="chip">твёрдо</button>
+        <button type="button" class="chip">мягко</button>
+        <button type="button" class="chip">легко</button>
+        <button type="button" class="chip">тяжело</button>
+        <button type="button" class="chip">тепло</button>
+        <button type="button" class="chip">холодно</button>
+      </div>
+      <p class="small">Выберите минимум три параметра, которые больше всего подходят вашему ощущению.</p>
+
+      <label for="bodySense">Можно дополнить своими словами</label>
+      <textarea id="bodySense" placeholder="Например: сжатие, ком, давление, дрожь, пустота..."></textarea>
+
+      <label for="emotionName">Шаг 3. Задайте вслух вопрос прямо в это ощущение</label>
+      <textarea id="emotionName" placeholder="Как я назову эту эмоцию? Наблюдайте ответ из этого состояния чувствования. Не анализируйте."></textarea>
+
+      <div class="practice-box">
+        <strong>Фраза завершения этапа:</strong>
+        <p>«Я чувствую <span id="emotionPhrase">эту эмоцию</span>. Она ощущается в теле как <span id="sensePhrase">...</span>».</p>
+      </div>
+
+      <div class="buttons">
+        <button class="secondary" type="button" onclick="prevStep()">Назад</button>
+        <button class="primary" type="button" onclick="nextStep()">Перейти ко 2 этапу</button>
+      </div>
+    </section>
+
+    <section class="card" data-step="2">
+      <h2>2 этап. Прожить эмоцию</h2>
+
+      <p>Если эмоция уже возникла — её невозможно отменить. Эмоцию нельзя «выключить», подавить или убрать усилием воли.</p>
+      <p>Но эмоцию можно прожить. Задача этого этапа — дать эмоции движение через слова, тело, дыхание, слёзы, голос или действия.</p>
+      <p>Не на другого человека. А через безопасное проживание внутри практики.</p>
+
+      <label for="expressionText">Шаг 1. Скажите или напишите всё, что чувствуете</label>
+      <textarea id="expressionText" placeholder="Мне страшно... / Я тревожусь... / Мне больно... / Я злюсь... / Я устала..."></textarea>
+
+      <div class="practice-box">
+        <p><strong>Шаг 2. Дайте эмоции движение через тело.</strong></p>
+        <p>Можно плакать, дышать глубже, трясти руками, ходить, сжимать подушку, выдыхать напряжение, дать телу двигаться.</p>
+        <p>Главное — не останавливать эмоцию.</p>
+      </div>
+
+      <label for="during">Шаг 3. Что меняется после выражения эмоции?</label>
+      <textarea id="during" placeholder="Например: стало легче дышать, появилось тепло, ушло напряжение, пришла усталость, захотелось тишины, появились слёзы..."></textarea>
+
+      <div class="practice-box">
+        <strong>Признак завершения этапа</strong>
+        <p>Эмоция проживается до состояния внутреннего опустошения.</p>
+        <p>Важно: ощущение после проживания эмоции не всегда бывает приятным. Иногда может появиться пустота, усталость, эмоциональное опустошение, отсутствие сил, желание побыть в тишине.</p>
+        <p>Это тоже является признаком того, что эмоция начала завершать свой цикл.</p>
+      </div>
+
+      <div class="buttons">
+        <button class="secondary" type="button" onclick="prevStep()">Назад</button>
+        <button class="primary" type="button" onclick="nextStep()">Перейти к 3 этапу</button>
+      </div>
+    </section>
+
+    <section class="card" data-step="3">
+      <h2>3 этап. Принять эмоцию</h2>
+
+      <p>Эмоции важно не только выразить. Им важно быть принятыми.</p>
+      <p>Когда чувство встречается без критики, осуждения и запрета — психика перестаёт удерживать эмоциональное напряжение.</p>
+
+      <div class="practice-box">
+        <p>Положите руку на область тела, где эмоция ощущалась сильнее всего.</p>
+        <p>И медленно прочитайте:</p>
+        <p><strong>«Я имею право проявлять эмоции. Я принимаю, что я имею право бояться, плакать, гневаться, кричать и пр. Я разрешаю себе… (плакать, бояться и пр)».</strong></p>
+        <p><strong>Сделайте глубокий вдох и выдох.</strong></p>
+        <p><strong>И оставьте выпущенные эмоции в прошлом. Не носите эти камни в душе. Пусть они останутся. И река времени унесёт их прочь.</strong></p>
+      </div>
+
+      <label for="acceptancePhrase">Что сейчас хочется сказать себе в принятие?</label>
+      <textarea id="acceptancePhrase" placeholder="Например: я понимаю, почему мне было тревожно. Мне жаль, что мне пришлось это переживать. Я рядом с собой..."></textarea>
+
+      <label for="after">Уровень тревоги сейчас от 0 до 10</label>
+      <div class="scale-wrap">
+        <input type="range" id="after" min="0" max="10" value="3" oninput="updateScale('after','afterValue')">
+        <div class="scale-value" id="afterValue">3</div>
+      </div>
+
+      <div class="buttons">
+        <button class="secondary" type="button" onclick="prevStep()">Назад</button>
+        <button class="primary" type="button" onclick="showSummary()">Завершить практику</button>
+      </div>
+
+      <div id="summaryBlock" style="display:none;">
+        <h2>Завершение практики</h2>
+        <div class="summary" id="summaryText"></div>
+        <div class="buttons">
+          <button class="secondary" type="button" onclick="copySummary()">Скопировать результат</button>
+          <button class="secondary" type="button" onclick="restart()">Пройти ещё раз</button>
+        </div>
+        <p class="small">Главное — не идеальное выполнение, а сам опыт: замечать, чувствовать, проживать и принимать себя в эмоции.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let step = 0;
+    let selectedSenses = [];
+
+    function byId(id) { return document.getElementById(id); }
+
+    function safeValue(id, fallback = '—') {
+      const element = byId(id);
+      if (!element || typeof element.value === 'undefined') return fallback;
+      const value = String(element.value).trim();
+      return value || fallback;
+    }
+
+    function updateScale(inputId, valueId) {
+      const input = byId(inputId);
+      const output = byId(valueId);
+      if (input && output) output.textContent = input.value;
+    }
+
+    function updateProgress() {
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+      const activeCard = document.querySelector(`[data-step="${step}"]`);
+      if (activeCard) activeCard.classList.add('active');
+      for (let i = 0; i < 4; i++) {
+        const dot = byId('dot' + i);
+        if (dot) dot.classList.toggle('active', i <= step);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+      if (step < 3) step += 1;
+      updateProgress();
+    }
+
+    function prevStep() {
+      if (step > 0) step -= 1;
+      updateProgress();
+    }
+
+    function updatePhrases() {
+      const emotion = safeValue('emotionName', 'эту эмоцию');
+      const senseText = selectedSenses.length ? selectedSenses.join(', ') : safeValue('bodySense', '...');
+      const emotionPhrase = byId('emotionPhrase');
+      const sensePhrase = byId('sensePhrase');
+      if (emotionPhrase) emotionPhrase.textContent = emotion === '—' ? 'эту эмоцию' : emotion;
+      if (sensePhrase) sensePhrase.textContent = senseText === '—' ? '...' : senseText;
+    }
+
+    function initSenseChips() {
+      document.querySelectorAll('#senseChips .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('selected');
+          selectedSenses = Array.from(document.querySelectorAll('#senseChips .chip.selected')).map(item => item.textContent.trim());
+          updatePhrases();
+        });
+      });
+    }
+
+    function showSummary() {
+      const before = Number(safeValue('before', '0'));
+      const after = Number(safeValue('after', '0'));
+      const diff = before - after;
+      const diffText = diff > 0
+        ? `Тревога снизилась на ${diff} пункт(а).`
+        : diff === 0
+          ? 'Уровень тревоги не изменился — это тоже наблюдение, а не ошибка.'
+          : `Тревога стала выше на ${Math.abs(diff)} пункт(а). Возможно, поднялся более глубокий слой эмоции.`;
+
+      const senses = selectedSenses.length ? selectedSenses.join(', ') : safeValue('bodySense');
+
+      const text = `Практика проживания тревоги\n\nСитуация: ${safeValue('situation')}\n\n1 этап — идентификация\nГде в теле: ${safeValue('bodyPlace')}\nОщущение: ${senses}\nНазвание эмоции: ${safeValue('emotionName')}\n\n2 этап — проживание\nСлова эмоции: ${safeValue('expressionText')}\nЧто изменилось после выражения: ${safeValue('during')}\n\n3 этап — принятие\nФраза принятия: ${safeValue('acceptancePhrase')}\n\nУровень тревоги до: ${before}/10\nУровень тревоги после: ${after}/10\n${diffText}\n\nЦикл: эмоция была идентифицирована, прожита и принята.`;
+
+      const summaryText = byId('summaryText');
+      const summaryBlock = byId('summaryBlock');
+      if (summaryText) summaryText.textContent = text;
+      if (summaryBlock) {
+        summaryBlock.style.display = 'block';
+        summaryBlock.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function copySummary() {
+      const text = byId('summaryText') ? byId('summaryText').textContent : '';
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert('Результат скопирован'));
+      } else {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        alert('Результат скопирован');
+      }
+    }
+
+    function restart() { location.reload(); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSenseChips();
+      updateScale('before', 'beforeValue');
+      updateScale('after', 'afterValue');
+      const bodySense = byId('bodySense');
+      const emotionName = byId('emotionName');
+      if (bodySense) bodySense.addEventListener('input', updatePhrases);
+      if (emotionName) emotionName.addEventListener('input', updatePhrases);
+      console.assert(byId('before') !== null, 'Поле before существует');
+      console.assert(byId('after') !== null, 'Поле after существует');
+      console.assert(typeof nextStep === 'function', 'Переход к следующему этапу работает');
+      console.assert(typeof showSummary === 'function', 'Итог практики доступен');
+    });
+  </script>
+</body>
+</html>
